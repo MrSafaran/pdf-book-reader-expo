@@ -85,7 +85,10 @@ export default function SignupScreen({ navigation }) {
           <Text style={styles.roleText}>Admin</Text>
         </TouchableOpacity>
       </View>
-      <Button title="Signup" onPress={handleSignup} />
+      <Button style={styles.singUpButton} title="Sign up" onPress={handleSignup} />
+      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.loginButtonText}>Already have an account? Login</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -95,15 +98,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F6F5F5',
+    backgroundColor: '#F5F5F5'
   },
   header: {
     fontSize: 34,
     marginBottom: 16,
-    color: '#007BFF',
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
     width: '75%',
     marginBottom: 15,
@@ -120,9 +122,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   activeRole: {
-    backgroundColor: '#007BFF',
+    backgroundColor: 'black',
   },
   roleText: {
     color: '#fff',
+  },
+  loginButton: {
+    marginTop: 15,
+    padding: 10,
+    borderRadius: 10,
+  },
+  loginButtonText: {
+    color: 'black',
+    textAlign: 'center',
+    textDecorationLine: 'underline'
   },
 });

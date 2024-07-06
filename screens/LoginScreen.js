@@ -69,14 +69,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#96C9F4'
+    backgroundColor: '#F5F5F5'
   },
   header: {
     fontSize: 34,
     marginBottom: 16,
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
     width: '75%',
     marginBottom: 15,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   activeRole: {
-    backgroundColor: '#007BFF',
+    backgroundColor: 'black',
   },
   roleText: {
     color: '#fff',

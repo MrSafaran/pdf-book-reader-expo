@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity, Linking, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity, Linking, StyleSheet, Switch } from 'react-native';
 import { getFiles, addFile } from '../Database';
 
 export default function HomeScreen({ route }) {
@@ -7,6 +7,7 @@ export default function HomeScreen({ route }) {
   const [fileUrl, setFileUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [files, setFiles] = useState([]);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     loadFiles();
@@ -34,20 +35,28 @@ export default function HomeScreen({ route }) {
     }
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Welcome, {user.name}</Text>
+    <View style={[styles.container, isDarkMode && styles.darkContainer]}>
+      <View style={styles.switchContainer}>
+        <Text style={[styles.switchText, isDarkMode && styles.darkText]}>Dark Mode</Text>
+        <Switch value={isDarkMode} onValueChange={toggleDarkMode} />
+      </View>
+      <Text style={[styles.header, isDarkMode && styles.darkText]}>Welcome, {user.name}</Text>
       {user.role === 'admin' && (
         <View style={styles.addFileContainer}>
-          <Text style={styles.addFileText}>Add a new PDF file</Text>
+          <Text style={[styles.addFileText, isDarkMode && styles.darkText]}>Add a new PDF file</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, isDarkMode && styles.darkInput]}
             placeholder="Enter file name"
             value={fileName}
             onChangeText={setFileName}
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, isDarkMode && styles.darkInput]}
             placeholder="Enter file URL"
             value={fileUrl}
             onChangeText={setFileUrl}
@@ -55,17 +64,17 @@ export default function HomeScreen({ route }) {
           <Button title="Add File" onPress={handleAddFile} />
         </View>
       )}
-      <Text style={styles.availableFilesText}>Available Files</Text>
+      <Text style={[styles.availableFilesText, isDarkMode && styles.darkText]}>Available Files</Text>
       <FlatList
         data={files}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.fileItem}
+            style={[styles.fileItem, isDarkMode && styles.darkFileItem]}
             onPress={() => Linking.openURL(item.url)}
           >
-            <Text style={styles.fileText}>{item.name}</Text>
-            <Text style={styles.fileNumber}>Item {item.id}</Text>
+            <Text style={[styles.fileText, isDarkMode && styles.darkText]}>{item.name}</Text>
+            <Text style={[styles.fileNumber, isDarkMode && styles.darkText]}>Item {item.id}</Text>
           </TouchableOpacity>
         )}
       />
@@ -78,6 +87,21 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: 'center',
+  },
+  darkContainer: {
+    backgroundColor: '#333',
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  switchText: {
+    fontSize: 18,
+  },
+  darkText: {
+    color: '#fff',
   },
   header: {
     fontSize: 24,
@@ -97,10 +121,16 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 15,
     borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  darkInput: {
+    backgroundColor: '#555',
+    color: '#fff',
   },
   availableFilesText: {
     fontSize: 18,
     marginBottom: 8,
+    fontWeight:'500',
   },
   fileItem: {
     padding: 10,
@@ -110,11 +140,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  darkFileItem: {
+    backgroundColor: '#444',
+    borderColor: '#555',
+  },
   fileText: {
-    fontSize: 16,
+    fontSize: 18,
   },
   fileNumber: {
     fontSize: 16,
-    color: '#007BFF',
+    color: 'black',
   },
 });
