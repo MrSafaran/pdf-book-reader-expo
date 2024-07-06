@@ -1,60 +1,42 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Helper function to get all users
-const getAllUsers = async () => {
-  const usersJson = await AsyncStorage.getItem('users');
-  return usersJson ? JSON.parse(usersJson) : [];
-};
+const USERS_KEY = 'USERS';
+const FILES_KEY = 'FILES';
 
-// Helper function to save all users
-const saveAllUsers = async (users) => {
-  await AsyncStorage.setItem('users', JSON.stringify(users));
-};
+const defaultFiles = [
+  { id: 1, url: 'https://quera.org/assignment/65652/get_pdf_file' },
+  { id: 2, url: 'https://quera.org/assignment/66950/get_pdf_file' },
+  { id: 3, url: 'https://quera.org/assignment/66970/get_pdf_file' },
+  { id: 4, url: 'https://quera.org/assignment/67735/get_pdf_file' },
+  { id: 5, url: 'https://quera.org/assignment/67736/get_pdf_file' },
+];
 
-// Helper function to get all files
-const getAllFiles = async () => {
-  const filesJson = await AsyncStorage.getItem('files');
-  return filesJson ? JSON.parse(filesJson) : [];
-};
-
-// Helper function to save all files
-const saveAllFiles = async (files) => {
-  await AsyncStorage.setItem('files', JSON.stringify(files));
-};
-
-// Initialize the database with default files
-export const initDatabase = async () => {
-  const defaultFiles = [
-    { fileName: 'File 1', filePath: './assets/T1.pdf' },
-    { fileName: 'File 2', filePath: './assets/T2.pdf' },
-    { fileName: 'File 3', filePath: './assets/T3.pdf' },
-    { fileName: 'File 4', filePath: './assets/T8.pdf' },
-    { fileName: 'File 5', filePath: './assets/T9.pdf' },
-  ];
-
-  const files = await getAllFiles();
-  if (files.length === 0) {
-    await saveAllFiles(defaultFiles);
+const initializeFiles = async () => {
+  const files = JSON.parse(await AsyncStorage.getItem(FILES_KEY));
+  if (!files || files.length === 0) {
+    await AsyncStorage.setItem(FILES_KEY, JSON.stringify(defaultFiles));
   }
 };
 
 export const addUser = async (name, lastName, nationalCode, role) => {
-  const users = await getAllUsers();
-  users.push({ name, lastName, nationalCode, role });
-  await saveAllUsers(users);
-};
-
-export const addFileToDB = async (fileName, filePath) => {
-  const files = await getAllFiles();
-  files.push({ fileName, filePath });
-  await saveAllFiles(files);
-};
-
-export const fetchFiles = async () => {
-  return await getAllFiles();
+  const users = JSON.parse(await AsyncStorage.getItem(USERS_KEY)) || [];
+  users.push({ id: users.length + 1, name, lastName, nationalCode, role });
+  await AsyncStorage.setItem(USERS_KEY, JSON.stringify(users));
 };
 
 export const validateUser = async (nationalCode) => {
-  const users = await getAllUsers();
-  return users.find(user => user.nationalCode === nationalCode) || null;
+  const users = JSON.parse(await AsyncStorage.getItem(USERS_KEY)) || [];
+  return users.find(user => user.nationalCode === nationalCode);
 };
+
+export const addFile = async (url) => {
+  const files = JSON.parse(await AsyncStorage.getItem(FILES_KEY)) || [];
+  files.push({ id: files.length + 1, url });
+  await AsyncStorage.setItem(FILES_KEY, JSON.stringify(files));
+};
+
+export const getFiles = async () => {
+  return JSON.parse(await AsyncStorage.getItem(FILES_KEY)) || [];
+};
+
+initializeFiles();
