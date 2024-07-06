@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { validateUser } from '../Database'; // Implement validateUser in Database.js
+import { View, TextInput, Button, Alert } from 'react-native';
+import { validateUser } from '../Database';
 
-const LoginScreen = ({ navigation }) => {
+export default function LoginScreen({ navigation }) {
   const [nationalCode, setNationalCode] = useState('');
 
-  const handleLogin = () => {
-    validateUser(nationalCode, user => {
-      if (user) {
-        navigation.navigate('Home', { user });
-      } else {
-        Alert.alert('Invalid credentials');
-      }
-    });
+  const handleLogin = async () => {
+    if (!nationalCode) {
+      Alert.alert('Validation Error', 'National Code is required');
+      return;
+    }
+
+    const user = await validateUser(nationalCode);
+    if (user) {
+      navigation.navigate('Home', { user });
+    } else {
+      Alert.alert('Error', 'Invalid National Code');
+    }
   };
 
   return (
@@ -21,6 +25,4 @@ const LoginScreen = ({ navigation }) => {
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
-};
-
-export default LoginScreen;
+}

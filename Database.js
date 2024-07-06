@@ -1,76 +1,60 @@
-import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const db = SQLite.openDatabase('mydb.db');
-
-
-export const initDatabase = () => {
-  db.transaction(tx => {
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        lastName TEXT,
-        nationalCode TEXT,
-        role TEXT,
-        UNIQUE(nationalCode)
-      );`
-    );
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS files (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        fileName TEXT,
-        filePath TEXT
-      );`
-    );
-  });
+// Helper function to get all users
+const getAllUsers = async () => {
+  const usersJson = await AsyncStorage.getItem('users');
+  return usersJson ? JSON.parse(usersJson) : [];
 };
 
-export const addUser = (name, lastName, nationalCode, role, callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      'INSERT INTO users (name, lastName, nationalCode, role) VALUES (?, ?, ?, ?)',
-      [name, lastName, nationalCode, role],
-      (_, result) => callback(result),
-      (_, error) => console.log('Error adding user:', error)
-    );
-  });
+// Helper function to save all users
+const saveAllUsers = async (users) => {
+  await AsyncStorage.setItem('users', JSON.stringify(users));
 };
 
-export const addFileToDB = (fileName, filePath, callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      'INSERT INTO files (fileName, filePath) VALUES (?, ?)',
-      [fileName, filePath],
-      (_, result) => callback(result),
-      (_, error) => console.log('Error adding file:', error)
-    );
-  });
+// Helper function to get all files
+const getAllFiles = async () => {
+  const filesJson = await AsyncStorage.getItem('files');
+  return filesJson ? JSON.parse(filesJson) : [];
 };
 
-export const fetchFiles = (callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      'SELECT * FROM files',
-      [],
-      (_, { rows: { _array } }) => callback(_array),
-      (_, error) => console.log('Error fetching files:', error)
-    );
-  });
+// Helper function to save all files
+const saveAllFiles = async (files) => {
+  await AsyncStorage.setItem('files', JSON.stringify(files));
 };
 
-export const validateUser = (nationalCode, callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      'SELECT * FROM users WHERE nationalCode = ?',
-      [nationalCode],
-      (_, { rows: { _array } }) => {
-        if (_array.length > 0) {
-          callback(_array[0]);
-        } else {
-          callback(null);
-        }
-      },
-      (_, error) => console.log('Error validating user:', error)
-    );
-  });
+// Initialize the database with default files
+export const initDatabase = async () => {
+  const defaultFiles = [
+    { fileName: 'File 1', filePath: './assets/T1.pdf' },
+    { fileName: 'File 2', filePath: './assets/T2.pdf' },
+    { fileName: 'File 3', filePath: './assets/T3.pdf' },
+    { fileName: 'File 4', filePath: './assets/T8.pdf' },
+    { fileName: 'File 5', filePath: './assets/T9.pdf' },
+  ];
+
+  const files = await getAllFiles();
+  if (files.length === 0) {
+    await saveAllFiles(defaultFiles);
+  }
+};
+
+export const addUser = async (name, lastName, nationalCode, role) => {
+  const users = await getAllUsers();
+  users.push({ name, lastName, nationalCode, role });
+  await saveAllUsers(users);
+};
+
+export const addFileToDB = async (fileName, filePath) => {
+  const files = await getAllFiles();
+  files.push({ fileName, filePath });
+  await saveAllFiles(files);
+};
+
+export const fetchFiles = async () => {
+  return await getAllFiles();
+};
+
+export const validateUser = async (nationalCode) => {
+  const users = await getAllUsers();
+  return users.find(user => user.nationalCode === nationalCode) || null;
 };

@@ -2,27 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { addUser } from '../Database';
 
-const SignupScreen = ({ navigation }) => {
+export default function SignupScreen({ navigation }) {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [nationalCode, setNationalCode] = useState('');
-  const [role, setRole] = useState('user'); // default to regular user
+  const [role, setRole] = useState('');
 
-  const handleSignup = () => {
-    // Perform validation here
+  const handleSignup = async () => {
     if (!name || !lastName || !nationalCode || !role) {
-      Alert.alert('Please fill all fields');
+      Alert.alert('Validation Error', 'All fields are required');
       return;
     }
-
-    addUser(name, lastName, nationalCode, role, result => {
-      if (result.rowsAffected > 0) {
-        Alert.alert('User added successfully');
-        navigation.navigate('Login');
-      } else {
-        Alert.alert('Failed to add user');
-      }
-    });
+    
+    try {
+      await addUser(name, lastName, nationalCode, role);
+      Alert.alert('Success', 'User registered successfully');
+      navigation.navigate('Login');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to register user');
+    }
   };
 
   return (
@@ -34,6 +32,4 @@ const SignupScreen = ({ navigation }) => {
       <Button title="Signup" onPress={handleSignup} />
     </View>
   );
-};
-
-export default SignupScreen;
+}
