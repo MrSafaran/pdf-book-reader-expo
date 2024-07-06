@@ -4,11 +4,11 @@ const USERS_KEY = 'USERS';
 const FILES_KEY = 'FILES';
 
 const defaultFiles = [
-  { id: 1, url: 'https://quera.org/assignment/65652/get_pdf_file' },
-  { id: 2, url: 'https://quera.org/assignment/66950/get_pdf_file' },
-  { id: 3, url: 'https://quera.org/assignment/66970/get_pdf_file' },
-  { id: 4, url: 'https://quera.org/assignment/67735/get_pdf_file' },
-  { id: 5, url: 'https://quera.org/assignment/67736/get_pdf_file' },
+  { id: 1, name: 'Book 1', url: 'https://quera.org/assignment/65652/get_pdf_file' },
+  { id: 2, name: 'Book 2', url: 'https://quera.org/assignment/66950/get_pdf_file' },
+  { id: 3, name: 'Book 3', url: 'https://quera.org/assignment/66970/get_pdf_file' },
+  { id: 4, name: 'Book 4', url: 'https://quera.org/assignment/67735/get_pdf_file' },
+  { id: 5, name: 'Book 5', url: 'https://quera.org/assignment/67735/get_pdf_file' },
 ];
 
 const initializeFiles = async () => {
@@ -29,9 +29,9 @@ export const validateUser = async (nationalCode) => {
   return users.find(user => user.nationalCode === nationalCode);
 };
 
-export const addFile = async (url) => {
+export const addFile = async (name, url) => {
   const files = JSON.parse(await AsyncStorage.getItem(FILES_KEY)) || [];
-  files.push({ id: files.length + 1, url });
+  files.push({ id: files.length + 1, name, url });
   await AsyncStorage.setItem(FILES_KEY, JSON.stringify(files));
 };
 

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, Alert, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { validateUser } from '../Database';
-import tailwind from 'tailwind-rn';
 
 export default function LoginScreen({ navigation }) {
   const [nationalCode, setNationalCode] = useState('');
@@ -37,29 +36,58 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View className="flex-1 justify-center items-center">
+    <View style={styles.container}>
       <TextInput
-        className="border p-2 w-3/4 mb-4"
+        style={styles.input}
         placeholder="National Code"
         value={nationalCode}
         onChangeText={setNationalCode}
         keyboardType="numeric"
       />
-      <View className="flex-row mb-4">
+      <View style={styles.roleContainer}>
         <TouchableOpacity
-          className={`p-2 ${role === 'user' ? 'bg-blue-500' : 'bg-gray-300'} mr-2`}
+          style={[styles.roleButton, role === 'user' && styles.activeRole]}
           onPress={() => setRole('user')}
         >
-          <Text className="text-white">User</Text>
+          <Text style={styles.roleText}>User</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className={`p-2 ${role === 'admin' ? 'bg-blue-500' : 'bg-gray-300'}`}
+          style={[styles.roleButton, role === 'admin' && styles.activeRole]}
           onPress={() => setRole('admin')}
         >
-          <Text className="text-white">Admin</Text>
+          <Text style={styles.roleText}>Admin</Text>
         </TouchableOpacity>
       </View>
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    width: '75%',
+    marginBottom: 15,
+  },
+  roleContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  roleButton: {
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: '#ccc',
+  },
+  activeRole: {
+    backgroundColor: '#007BFF',
+  },
+  roleText: {
+    color: '#fff',
+  },
+});

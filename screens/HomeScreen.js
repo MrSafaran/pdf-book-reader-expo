@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity, Linking, StyleSheet } from 'react-native';
 import { getFiles, addFile } from '../Database';
-import tailwind from 'tailwind-rn';
 
 export default function HomeScreen({ route }) {
   const { user } = route.params;
   const [fileUrl, setFileUrl] = useState('');
+  const [fileName, setFileName] = useState('');
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
@@ -18,14 +18,15 @@ export default function HomeScreen({ route }) {
   };
 
   const handleAddFile = async () => {
-    if (!fileUrl) {
-      Alert.alert('Validation Error', 'File URL is required');
+    if (!fileUrl || !fileName) {
+      Alert.alert('Validation Error', 'File name and URL are required');
       return;
     }
 
     try {
-      await addFile(fileUrl);
+      await addFile(fileName, fileUrl);
       setFileUrl('');
+      setFileName('');
       loadFiles();
       Alert.alert('Success', 'File added successfully');
     } catch (error) {
@@ -34,13 +35,19 @@ export default function HomeScreen({ route }) {
   };
 
   return (
-    <View className="flex-1 p-4">
-      <Text className="text-2xl mb-4">Welcome, {user.name}</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>Welcome, {user.name}</Text>
       {user.role === 'admin' && (
-        <View className="mb-4">
-          <Text className="text-xl mb-2">Add a new PDF file</Text>
+        <View style={styles.addFileContainer}>
+          <Text style={styles.addFileText}>Add a new PDF file</Text>
           <TextInput
-            className="border p-2 mb-2"
+            style={styles.input}
+            placeholder="Enter file name"
+            value={fileName}
+            onChangeText={setFileName}
+          />
+          <TextInput
+            style={styles.input}
             placeholder="Enter file URL"
             value={fileUrl}
             onChangeText={setFileUrl}
@@ -48,19 +55,61 @@ export default function HomeScreen({ route }) {
           <Button title="Add File" onPress={handleAddFile} />
         </View>
       )}
-      <Text className="text-xl mb-2">Available Files</Text>
+      <Text style={styles.availableFilesText}>Available Files</Text>
       <FlatList
         data={files}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            className="p-2 mb-2 border"
+            style={styles.fileItem}
             onPress={() => Linking.openURL(item.url)}
           >
-            <Text>{item.url}</Text>
+            <Text style={styles.fileText}>{item.name}</Text>
+            <Text style={styles.fileNumber}>Item {item.id}</Text>
           </TouchableOpacity>
         )}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    marginBottom: 16,
+  },
+  addFileContainer: {
+    marginBottom: 16,
+  },
+  addFileText: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 8,
+  },
+  availableFilesText: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  fileItem: {
+    padding: 10,
+    borderWidth: 1,
+    marginBottom: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  fileText: {
+    fontSize: 16,
+  },
+  fileNumber: {
+    fontSize: 16,
+    color: '#007BFF',
+  },
+});
