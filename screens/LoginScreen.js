@@ -37,6 +37,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Login</Text>
       <TextInput
         style={styles.input}
         placeholder="National Code"
@@ -69,11 +70,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    fontSize: 24,
+    marginBottom: 16,
+  },
   input: {
     borderWidth: 1,
     padding: 10,
     width: '75%',
     marginBottom: 15,
+    borderRadius: 10,
   },
   roleContainer: {
     flexDirection: 'row',
@@ -83,6 +89,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 10,
     backgroundColor: '#ccc',
+    borderRadius: 10,
   },
   activeRole: {
     backgroundColor: '#007BFF',

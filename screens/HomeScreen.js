@@ -77,10 +77,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    justifyContent: 'center',
   },
   header: {
     fontSize: 24,
     marginBottom: 16,
+    textAlign: 'center',
   },
   addFileContainer: {
     marginBottom: 16,
@@ -92,7 +94,9 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     padding: 10,
-    marginBottom: 8,
+    width: '100%',
+    marginBottom: 15,
+    borderRadius: 10,
   },
   availableFilesText: {
     fontSize: 18,
@@ -102,6 +106,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     marginBottom: 8,
+    borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
