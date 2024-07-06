@@ -95,10 +95,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F6F5F5',
   },
   header: {
-    fontSize: 24,
+    fontSize: 34,
     marginBottom: 16,
+    color: '#007BFF',
   },
   input: {
     borderWidth: 1,
