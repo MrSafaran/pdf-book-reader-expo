@@ -13,9 +13,9 @@ This React Native Expo project is a PDF viewer application that allows users to 
 
 ![Signup Screen](screenshots/signup_screen.jpg)
 ![Login Screen](screenshots/login_screen.jpg)
-![Home Admin Screen](home_admin_screen.jpg)
-![Home User Screen](home_user_screen.jpg)
-![Dark Mode](darkmode_screen.jpg)
+![Home Admin Screen](screenshots/home_admin_screen.jpg)
+![Home User Screen](screenshots/home_user_screen.jpg)
+![Dark Mode](screenshots/darkmode_screen.jpg)
 
 ## Installation
 
