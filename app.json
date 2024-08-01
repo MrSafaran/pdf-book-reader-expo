@@ -15,9 +15,14 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mamrezx.mypdfapp"
     },
-    "web": {
+    "web": {},
+    "extra": {
+      "eas": {
+        "projectId": "4eb29799-9ef6-4fcb-87c7-2363347b995f"
+      }
     }
   }
 }
